@@ -11,7 +11,7 @@ public:
 		left = nullptr;
 		right = nullptr;
 	}
-	Node* insertNode(Node* root, int value);
-	void printTree(Node* n);
+	void insertNode(Node* value);
+	void printTree();
 };
 

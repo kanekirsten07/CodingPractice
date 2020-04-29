@@ -1,28 +1,31 @@
 #include "Node.h"
 #include <iostream>
-Node* Node::insertNode(Node* root, int value)
+
+void Node::insertNode(Node* value)
 {
-	if (nullptr == root)
+	if (nullptr == this->left)
 	{
-		root = new Node(value);
-		return root;
+		this->left = value;
 	}
-	else if (nullptr == root->left)
+	else if (nullptr == this->right)
 	{
-		root->left= insertNode(root->left, value);
+		this->right = value;
 	}
 	else
 	{
-		root->right = insertNode(root->right, value);
+		this->left->insertNode(value);
 	}
 }
 
-void Node::printTree(Node* n)
+void Node::printTree()
 {
-	if (nullptr == n)
-		return;
-
-	std::cout << n->data;
-	printTree(n->left);
-	printTree(n->right);
+	std::cout << this->data;
+	if (nullptr != this->left)
+	{
+		this->left->printTree();
+	}
+	if (nullptr != this->right)
+	{
+		this->right->printTree();
+	}
 }

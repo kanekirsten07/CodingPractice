@@ -149,9 +149,11 @@
   <ItemGroup>
     <ClCompile Include="C++Tree.cpp" />
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="SharedPtrNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Node.h" />
+    <ClInclude Include="SharedPtrNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
