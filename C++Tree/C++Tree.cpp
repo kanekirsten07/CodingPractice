@@ -34,10 +34,28 @@ int main()
     sharedPtrNode->insertNode(sharedPtrNode4);
     sharedPtrNode->insertNode(sharedPtrNode5);
 
-    sharedPtrNode->printTree();
+    std::cout << "Depth First" << std::endl;
+    sharedPtrNode->printTreeDepthFirst();
+    std::cout << "Breadth first" << std::endl;
+    sharedPtrNode->printTreeBreadthFirst();
+
+    auto binarysharedPtrNode = std::make_shared<SharedPtrNode>(3);
+    auto binarysharedPtrNode2 = std::make_shared<SharedPtrNode>(1);
+    auto binarysharedPtrNode3 = std::make_shared<SharedPtrNode>(2);
+    auto binarysharedPtrNode4 = std::make_shared<SharedPtrNode>(4);
+    auto binarysharedPtrNode5 = std::make_shared<SharedPtrNode>(5);
+
+    binarysharedPtrNode->binaryInsertNode(sharedPtrNode2);
+    binarysharedPtrNode->binaryInsertNode(sharedPtrNode3);
+    binarysharedPtrNode->binaryInsertNode(sharedPtrNode4);
+    binarysharedPtrNode->binaryInsertNode(sharedPtrNode5);
+
+    std::cout << "binary bredepthadth first" << std::endl;
+    binarysharedPtrNode->printTreeDepthFirst();
+    std::cout << "binary breadth first" << std::endl;
+    binarysharedPtrNode->printTreeBreadthFirst();
 
     return 0;
-    std::cout << n->data;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

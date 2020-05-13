@@ -2,61 +2,86 @@
 
 #include "Node.h"
 #include <iostream>
+#include <queue>
 
 
-void SharedPtrNode::insertNode(std::shared_ptr<SharedPtrNode> value)
+void SharedPtrNode::insertNode(const std::shared_ptr<SharedPtrNode>& value)
 {
-	if (nullptr == this->left)
+	if (nullptr == left)
 	{
-		this->left = value;
+		left = value;
 	}
-	else if (nullptr == this->right)
+	else if (nullptr == right)
 	{
-		this->right = value;
+		right = value;
 	}
 	else
 	{
-		this->left->insertNode(value);
+		left->insertNode(value);
 	}
 }
 
-void SharedPtrNode::binaryInsertNode(std::shared_ptr<SharedPtrNode> value)
+void SharedPtrNode::binaryInsertNode(const std::shared_ptr<SharedPtrNode>& value)
 {
-	if (value->data < this->data)
+	if (value->data < data)
 	{
-		if (nullptr == this->left)
+		if (nullptr == left)
 		{
-			this->left = value;
+			left = value;
 		}
 		else
 		{
-			this->left->insertNode(value);
+			left->insertNode(value);
 		}
-	}
-	else if (value->data > this->data)
+	}//so we can handle equal cases
+	else 
 	{
-		if (nullptr == this->right)
+		if (nullptr == right)
 		{
-			this->right = value;
+			right = value;
 		}
 		else
 		{
-			this->right->insertNode(value);
+			right->insertNode(value);
 		}
 	}
 }
 
 
 
-void SharedPtrNode::printTree()
+void SharedPtrNode::printTreeDepthFirst()
 {
-	std::cout << this->data;
-	if (nullptr != this->left)
+	std::cout << data;
+	if (nullptr != left)
 	{
-		this->left->printTree();
+		left->printTreeDepthFirst();
 	}
-	if (nullptr != this->right)
+	if (nullptr != right)
 	{
-		this->right->printTree();
+		right->printTreeDepthFirst();
+	}
+}
+
+void SharedPtrNode::printTreeBreadthFirst()
+{
+	std::queue<SharedPtrNode*> myQueue;
+	//Can avoid using this by passing in the node you wish to
+	//Start the iteration through a paramter
+	myQueue.push(this);
+
+
+	while (!myQueue.empty())
+	{
+		SharedPtrNode* node = myQueue.front();;
+		myQueue.pop();
+		std::cout << node->data;
+		if (nullptr != node->left)
+		{
+			myQueue.push(node->left.get());
+		}
+		if (nullptr != node->right)
+		{
+			myQueue.push(node->right.get());
+		}
 	}
 }

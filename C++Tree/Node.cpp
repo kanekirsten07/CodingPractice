@@ -5,15 +5,15 @@ void Node::insertNode(Node* value)
 {
 	if (nullptr == this->left)
 	{
-		this->left = value;
+		left = value;
 	}
 	else if (nullptr == this->right)
 	{
-		this->right = value;
+		right = value;
 	}
 	else
 	{
-		this->left->insertNode(value);
+		left->insertNode(value);
 	}
 }
 
@@ -22,10 +22,10 @@ void Node::printTree()
 	std::cout << this->data;
 	if (nullptr != this->left)
 	{
-		this->left->printTree();
+		left->printTree();
 	}
 	if (nullptr != this->right)
 	{
-		this->right->printTree();
+		right->printTree();
 	}
 }

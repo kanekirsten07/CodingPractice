@@ -1,0 +1,2 @@
+G:\Documents\Git\CodingPractice\C++Tree\Debug\C++Tree.exe
+G:\Documents\Git\CodingPractice\C++Tree\Debug\C++Tree.pdb
