@@ -4,6 +4,9 @@
 #include <iostream>
 #include "Node.h"
 #include "SharedPtrNode.h"
+//Why do i need to include the .cpp and not the header
+#include "KirstenSharedPtr.cpp"
+
 
 int main()
 {
@@ -54,6 +57,10 @@ int main()
     binarysharedPtrNode->printTreeDepthFirst();
     std::cout << "binary breadth first" << std::endl;
     binarysharedPtrNode->printTreeBreadthFirst();
+
+    std::cout << "Custom Shared Ptr Implementation" << std::endl;
+
+    auto kirstenSharedPtr = KirstenSharedPtr::Make(7);
 
     return 0;
 }

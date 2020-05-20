@@ -22,6 +22,14 @@ ExportedObj/
 *.booproj
 *.svd
 *.pdb
+*.obj
+*.tlog
+*.ipch
+*.db
+*.sqlite
+*.ilk
+*.opendb
+*.log
 
 
 # Unity3D generated meta files

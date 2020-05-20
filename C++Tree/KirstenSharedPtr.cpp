@@ -1,14 +1,18 @@
 #include "KirstenSharedPtr.h"
 
+KirstenNode* KirstenSharedPtr::m_node = nullptr;
+int KirstenSharedPtr::m_refCounter = 0;
+
 KirstenNode* KirstenSharedPtr::Get()
 {
-	++refCounter;
-	return node;
+	return KirstenSharedPtr::m_node;
 }
 
 
-KirstenSharedPtr KirstenSharedPtr::Make(int v)
+KirstenSharedPtr KirstenSharedPtr::Make(const int& v)
 {
 	return KirstenSharedPtr(v);
 }
+
+
 
