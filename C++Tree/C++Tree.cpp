@@ -4,8 +4,7 @@
 #include <iostream>
 #include "Node.h"
 #include "SharedPtrNode.h"
-//Why do i need to include the .cpp and not the header
-#include "KirstenSharedPtr.cpp"
+#include "KirstenSharedPtr.h"
 
 
 int main()
@@ -60,7 +59,37 @@ int main()
 
     std::cout << "Custom Shared Ptr Implementation" << std::endl;
 
-    auto kirstenSharedPtr = KirstenSharedPtr::Make(7);
+    auto kirstenSharedPtr = KirstenSharedPtr(7);
+    auto kirstenSharedPtr2 = KirstenSharedPtr(kirstenSharedPtr);
+
+    if (kirstenSharedPtr == kirstenSharedPtr2)
+    {
+        std::cout << "great success!";
+    }
+    else
+    {
+        std::cout << "something is wrong";
+    }
+
+    auto kirstenSharedPtr3 = kirstenSharedPtr2;
+    if (kirstenSharedPtr3 == kirstenSharedPtr2)
+    {
+        std::cout << "assignment constructor success";
+    }
+    else
+    {
+        std::cout << "assignment constructor fail";
+    }
+
+    kirstenSharedPtr--;
+    if (kirstenSharedPtr != kirstenSharedPtr2)
+    {
+        std::cout << "copy constructor success";
+    }
+    else
+    {
+        std::cout << "copy constructor fail";
+    }
 
     return 0;
 }
