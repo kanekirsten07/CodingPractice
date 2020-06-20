@@ -2,9 +2,10 @@
 class KirstenSharedPtr
 {
 public:
-	int m_refCounter;
+	int* m_refCounter;
 	KirstenNode* m_node;
 	KirstenNode* Get();
+	int* GetRefCounter() { return m_refCounter; }
 
 	KirstenSharedPtr(const int& v)
 	{
@@ -14,6 +15,7 @@ public:
 
 	KirstenSharedPtr(const KirstenSharedPtr& ptr)
 	{
+		(*ptr.m_refCounter)++;
 		m_refCounter = ptr.m_refCounter;
 		m_node = ptr.m_node;
 	}
@@ -25,7 +27,6 @@ public:
 			delete m_node;
 		}
 	}
-
 	
 	bool operator==(const KirstenSharedPtr& x)
 	{
@@ -41,27 +42,6 @@ public:
 	{
 		m_refCounter = k.m_refCounter;
 		m_node = k.m_node;
-	}
-
-	// Overload post/pre increment 
-	void operator++()
-	{
-		m_refCounter++;
-	}
-
-	void operator++(int)
-	{
-		m_refCounter++;
-	}
-
-	// Overload post/pre decrement 
-	void operator--()
-	{
-		m_refCounter--;
-	}
-	void operator--(int)
-	{
-		m_refCounter--;
 	}
 
 private:
