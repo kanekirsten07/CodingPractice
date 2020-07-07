@@ -1,16 +1,19 @@
 #include "KirstenNode.h"
 class KirstenSharedPtr
 {
-public:
+private:
 	int* m_refCounter;
+	KirstenSharedPtr() {}
+
+public:
 	KirstenNode* m_node;
 	KirstenNode* Get();
-	int* GetRefCounter() { return m_refCounter; }
+	int GetRefCounter() { return *m_refCounter; }
 
 	KirstenSharedPtr(const int& v)
 	{
 		m_node = new KirstenNode(v);
-		++m_refCounter;
+		m_refCounter = new int(1);
 	}
 
 	KirstenSharedPtr(const KirstenSharedPtr& ptr)
@@ -21,10 +24,11 @@ public:
 	}
 	~KirstenSharedPtr()
 	{
-		--m_refCounter;
+		(*m_refCounter)--;
 		if (m_refCounter <= 0)
 		{
 			delete m_node;
+			delete m_refCounter;
 		}
 	}
 	
@@ -44,8 +48,5 @@ public:
 		m_node = k.m_node;
 	}
 
-private:
-
-	KirstenSharedPtr() {}
 
 };

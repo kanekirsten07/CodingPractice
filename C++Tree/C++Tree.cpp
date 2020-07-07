@@ -5,6 +5,32 @@
 #include "Node.h"
 #include "SharedPtrNode.h"
 #include "KirstenSharedPtr.h"
+#include <vector>
+
+void testScope1(KirstenSharedPtr& copy1)
+{
+    KirstenSharedPtr copy = copy1;
+    if (copy.GetRefCounter() == copy1.GetRefCounter())
+    {
+        std::cout << "Scope Ref counter is correct" << std::endl;
+    }
+    else
+    {
+        std::cout << "Scope Ref Counter is wrong" << std::endl;
+    }
+}
+
+void testScope2(KirstenSharedPtr copy2)
+{
+    if (copy2.GetRefCounter() == 2)
+    {
+        std::cout << "Scope Ref2 counter is correct" << std::endl;
+    }
+    else
+    {
+        std::cout << "Scope Ref2 Counter is wrong" << std::endl;
+    }
+}
 
 
 int main()
@@ -59,37 +85,65 @@ int main()
 
     std::cout << "Custom Shared Ptr Implementation" << std::endl;
 
-    auto kirstenSharedPtr = KirstenSharedPtr(7);
-    auto kirstenSharedPtr2 = KirstenSharedPtr(kirstenSharedPtr);
+    KirstenSharedPtr kirstenSharedPtr = KirstenSharedPtr(7);
+    KirstenSharedPtr kirstenSharedPtr2 = KirstenSharedPtr(kirstenSharedPtr);
 
     if (kirstenSharedPtr == kirstenSharedPtr2)
     {
-        std::cout << "great success!";
+        std::cout << "great success!" << std::endl;
     }
     else
     {
-        std::cout << "something is wrong";
+        std::cout << "something is wrong" << std::endl;
     }
 
     auto kirstenSharedPtr3 = kirstenSharedPtr2;
     if (kirstenSharedPtr3 == kirstenSharedPtr2)
     {
-        std::cout << "assignment constructor success";
+        std::cout << "assignment constructor success" << std::endl;
     }
     else
     {
-        std::cout << "assignment constructor fail";
+        std::cout << "assignment constructor fail" << std::endl;
     }
 
-    kirstenSharedPtr--;
-    if (kirstenSharedPtr != kirstenSharedPtr2)
+    KirstenSharedPtr sharedPtr = KirstenSharedPtr(1);
+    if (sharedPtr.GetRefCounter() == 1)
     {
-        std::cout << "copy constructor success";
+        std::cout << "Ref counter is correct" << std::endl;
     }
     else
     {
-        std::cout << "copy constructor fail";
+        std::cout << "Ref Counter is wrong" << std::endl;
     }
+
+    testScope1(sharedPtr);
+    testScope2(sharedPtr);
+    if (sharedPtr.GetRefCounter() == 1)
+    {
+        std::cout << "Ref counter post scope is correct" << std::endl;
+    }
+    else
+    {
+        std::cout << "Ref Counter post scope is wrong" << std::endl;
+    }
+
+    std::vector<KirstenSharedPtr> myVector;
+    KirstenSharedPtr sharedPtr2 = KirstenSharedPtr(2);
+    myVector.push_back(KirstenSharedPtr(sharedPtr2));
+    myVector.push_back(KirstenSharedPtr(sharedPtr2));
+    myVector.push_back(KirstenSharedPtr(sharedPtr2));
+    myVector.push_back(KirstenSharedPtr(sharedPtr2));
+    if (myVector.size() == sharedPtr2.GetRefCounter()-1)
+    {
+        //This will be off by one because of the copy constructor of push_back
+        std::cout << "Ref Counter vector is correct" << std::endl;
+    }
+    else
+    {
+        std::cout << "Ref counter vector is wrong" << std::endl;
+    }
+
 
     return 0;
 }
