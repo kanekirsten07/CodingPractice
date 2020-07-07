@@ -130,10 +130,10 @@ int main()
 
     std::vector<KirstenSharedPtr> myVector;
     KirstenSharedPtr sharedPtr2 = KirstenSharedPtr(2);
-    myVector.push_back(KirstenSharedPtr(sharedPtr2));
-    myVector.push_back(KirstenSharedPtr(sharedPtr2));
-    myVector.push_back(KirstenSharedPtr(sharedPtr2));
-    myVector.push_back(KirstenSharedPtr(sharedPtr2));
+    myVector.push_back(sharedPtr2);
+    myVector.push_back(sharedPtr2);
+    myVector.push_back(sharedPtr2);
+    myVector.push_back(sharedPtr2);
     if (myVector.size() == sharedPtr2.GetRefCounter()-1)
     {
         //This will be off by one because of the copy constructor of push_back
