@@ -1,0 +1,2 @@
+G:\Documents\Git\CodingPractice\Debug\PtrsPractice.exe
+G:\Documents\Git\CodingPractice\Debug\PtrsPractice.pdb

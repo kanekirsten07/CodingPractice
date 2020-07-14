@@ -1,7 +1,7 @@
 #include "KirstenSharedPtr.h"
 
 
-KirstenNode* KirstenSharedPtr::Get()
+const int* KirstenSharedPtr::Get()
 {
 	++m_refCounter;
 	return KirstenSharedPtr::m_node;

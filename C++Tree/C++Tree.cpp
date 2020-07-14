@@ -144,7 +144,6 @@ int main()
         std::cout << "Ref counter vector is wrong" << std::endl;
     }
 
-
     return 0;
 }
 
