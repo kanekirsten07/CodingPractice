@@ -1,16 +1,17 @@
 #include "CoinAccount.h"
 #include <iostream>
+using namespace std;
 
 void CoinAccount::AddBalance(const int& amount)
 {
-	m_balance.Set(*m_balance.Get() + amount);
+	*m_balance = *m_balance + amount;
 }
 
 void CoinAccount::RemoveBalance(const int& amount)
 {
-	m_balance.Set(*m_balance.Get() + amount);
-	if (*m_balance.Get() < 0)
+	*m_balance = *m_balance - amount;
+	if (*m_balance < 0)
 	{
-		std::cout << "Overdraft!";
+		std::cout << "Overdraft!" << endl;
 	}
 }

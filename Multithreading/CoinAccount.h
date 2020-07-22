@@ -1,18 +1,17 @@
 #pragma once
 #include <memory>
-#include <KirstenSharedPtr.h>
 
 class CoinAccount
 {
 private:
-	KirstenSharedPtr m_balance = NULL;
+	int* m_balance;
 	CoinAccount();
 public:
 	CoinAccount(const int& startingAmount)
 	{
-		m_balance = KirstenSharedPtr::KirstenSharedPtr(startingAmount);
+		m_balance = new int(startingAmount);
 	}
-	int GetBalance() {return *m_balance.Get();};
+	int GetBalance() {return *m_balance;};
 	void AddBalance(const int& amount);
 	void RemoveBalance(const int& amount);
 };

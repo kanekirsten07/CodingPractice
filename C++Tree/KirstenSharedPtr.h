@@ -7,12 +7,12 @@ private:
 	int* m_node = nullptr;
 	KirstenSharedPtr() {}
 public:
-	const int* Get() 
+	const int& Get() const
 	{
-		++m_refCounter;
-		return KirstenSharedPtr::m_node;
+		++(*m_refCounter);
+		return *m_node;
 	}
-	void Set(const int& value) { *m_node = value; };
+	void Set(const int& value) { *m_node = value; }
 	const int GetRefCounter() { return *m_refCounter; }
 
 	KirstenSharedPtr(const int& v)
@@ -37,12 +37,12 @@ public:
 		delete m_refCounter;
 	}
 	
-	bool operator==(const KirstenSharedPtr& x)
+	const bool operator==(const KirstenSharedPtr& x)
 	{
 		return m_refCounter == x.m_refCounter && m_node == x.m_node;
 	};
 
-	bool operator!=(const KirstenSharedPtr& x)
+	const bool operator!=(const KirstenSharedPtr& x)
 	{
 		return m_refCounter == x.m_refCounter && m_node == x.m_node;
 	};
