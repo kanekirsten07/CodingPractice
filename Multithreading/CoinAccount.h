@@ -14,4 +14,6 @@ public:
 	int GetBalance() {return *m_balance;};
 	void AddBalance(const int& amount);
 	void RemoveBalance(const int& amount);
+	void AddBalanceMutex(const int& amount);
+	void RemoveBalanceMutex(const int& amount);
 };

@@ -1,7 +1,10 @@
 #include "CoinAccount.h"
 #include <iostream>
+#include <mutex>
 using namespace std;
 
+//The mutex apparently needs to be here and I don't understand things
+std::mutex accountMutex;
 void CoinAccount::AddBalance(const int& amount)
 {
 	*m_balance = *m_balance + amount;
@@ -12,6 +15,22 @@ void CoinAccount::RemoveBalance(const int& amount)
 	*m_balance = *m_balance - amount;
 	if (*m_balance < 0)
 	{
-		std::cout << "Overdraft!" << endl;
+		std::cout << "Remove Balance Overdraft!" << "balance:" << *m_balance << endl;
+	}
+}
+
+void CoinAccount::AddBalanceMutex(const int& amount)
+{
+	std::lock_guard<std::mutex> guard(accountMutex);
+	*m_balance = *m_balance + amount;
+}
+
+void CoinAccount::RemoveBalanceMutex(const int& amount)
+{
+	std::lock_guard<std::mutex> guard(accountMutex);
+	*m_balance = *m_balance - amount;
+	if (*m_balance < 0)
+	{
+		std::cout << "Remove Balance Mutex Overdraft!" << "balance:" << *m_balance << endl;
 	}
 }

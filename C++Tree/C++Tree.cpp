@@ -87,6 +87,14 @@ int main()
 
     KirstenSharedPtr kirstenSharedPtr = KirstenSharedPtr(7);
     KirstenSharedPtr kirstenSharedPtr2 = KirstenSharedPtr(kirstenSharedPtr);
+    KirstenSharedPtr ksp3 = kirstenSharedPtr.Get();
+    if (ksp3.GetRefCounter() != 1)
+    {
+        std::cout << "ref counter on get() is wrong" << std::endl;
+    }else
+    {
+        std::cout << "ref counter okay" << std::endl;
+    }
 
     if (kirstenSharedPtr == kirstenSharedPtr2)
     {

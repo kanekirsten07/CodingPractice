@@ -7,13 +7,12 @@ private:
 	int* m_node = nullptr;
 	KirstenSharedPtr() {}
 public:
-	const int& Get() const
+	const int Get() const
 	{
-		++(*m_refCounter);
 		return *m_node;
 	}
 	void Set(const int& value) { *m_node = value; }
-	const int GetRefCounter() { return *m_refCounter; }
+	int GetRefCounter() const { return *m_refCounter; }
 
 	KirstenSharedPtr(const int& v)
 	{
