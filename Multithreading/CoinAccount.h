@@ -7,12 +7,13 @@ class CoinAccount
 {
 private:
 	int* m_balance;
-	std::mutex accountMutex;
+	//shared lock for read/write purposes
+	std::shared_mutex accountMutex;
 	CoinAccount();
 public:
 	CoinAccount(const int& startingAmount)
 	{
-		std::lock_guard<std::mutex> guard(accountMutex);
+		std::shared_lock<std::shared_mutex> lock(accountMutex);
 		m_balance = new int(startingAmount);
 	}
 	int GetBalance() {return *m_balance;};

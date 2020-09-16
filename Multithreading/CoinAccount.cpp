@@ -22,20 +22,20 @@ void CoinAccount::RemoveBalance(const int& amount)
 void CoinAccount::AddBalanceMutex(const int& amount)
 {
 	//only one thread should be able to add at a time
-	std::lock_guard<std::mutex> guard(accountMutex);
+	std::unique_lock<std::shared_mutex> lock(accountMutex);
 	*m_balance = *m_balance + amount;
 }
 
 void CoinAccount::RemoveBalanceMutex(const int& amount)
 {
 	//only one thread should be able to remove at a time
-	std::lock_guard<std::mutex> guard(accountMutex);
-
+	std::unique_lock<std::shared_mutex> lock(accountMutex);
 	*m_balance = *m_balance - amount;
 	if (*m_balance < 0)
 	{
 		std::cout << "Remove Balance Mutex Overdraft!" << "balance:" << *m_balance << endl;
 	}
+	
 }
 
 
