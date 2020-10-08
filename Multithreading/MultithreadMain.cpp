@@ -1,30 +1,10 @@
 #include <thread>
 #include "CoinAccount.h"
-#include <functional>
 #include <thread>
 #include <iostream>
 using namespace std;
 using namespace std::placeholders;
 
-
-void AccountTrade(CoinAccount& account1, CoinAccount& account2, uint32_t account1toAccount2, uint32_t account2toAccount1)
-{
-	auto addBalanceAccount1 = std::bind(&CoinAccount::AddBalanceMutex, &account1, _1);
-	auto removeBalanceAccount1 = std::bind(&CoinAccount::RemoveBalanceMutex, &account1, _1);
-	auto addBalanceAccount2 = std::bind(&CoinAccount::AddBalanceMutex, &account2, _1);
-	auto removeBalanceAccount2 = std::bind(&CoinAccount::RemoveBalanceMutex, &account2, _1);
-
-	
-	std::thread t2(removeBalanceAccount1, account1toAccount2);
-	std::thread t4(removeBalanceAccount2, account2toAccount1);
-	std::thread t1(addBalanceAccount1, account2toAccount1);
-	std::thread t3(addBalanceAccount2, account1toAccount2);
-	
-	t1.join();
-	t2.join();
-	t3.join();
-	t4.join();
-}
 
 int main()
 {
@@ -70,8 +50,16 @@ int main()
 	CoinAccount account3(60);
 	CoinAccount account4(20);
 
-	AccountTrade(account3, account4, 40, 20);
+	TradeItem* wizardRobes = new TradeItem(TradeItem::ItemType::ROBES, "Sparkly Wizard Robes");
 
+	account4.AddToInventory(wizardRobes);
+
+	std::thread tradeThread([&account3, &account4, &wizardRobes]()
+		{
+			account3.AccountTrade(account4, wizardRobes, 20);
+		});
+
+	tradeThread.join();
 	if (account3.GetBalance() == 40)
 	{
 		std::cout << "Success!" << endl;
@@ -82,6 +70,24 @@ int main()
 	}
 
 	if (account4.GetBalance() == 40)
+	{
+		std::cout << "Success!" << endl;
+	}
+	else
+	{
+		std::cout << "Something is wrong with trade account 2" << endl;
+	}
+
+	if (account3.HasItem(wizardRobes))
+	{
+		std::cout << "Success!" << endl;
+	}
+	else
+	{
+		std::cout << "Something is wrong with trade account 1" << endl;
+	}
+
+	if (!account4.HasItem(wizardRobes))
 	{
 		std::cout << "Success!" << endl;
 	}

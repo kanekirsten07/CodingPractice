@@ -21,9 +21,15 @@
     <ClCompile Include="CoinAccount.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TradeItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CoinAccount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TradeItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

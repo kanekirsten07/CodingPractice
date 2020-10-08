@@ -144,9 +144,11 @@
   <ItemGroup>
     <ClCompile Include="CoinAccount.cpp" />
     <ClCompile Include="MultithreadMain.cpp" />
+    <ClCompile Include="TradeItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CoinAccount.h" />
+    <ClInclude Include="TradeItem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
