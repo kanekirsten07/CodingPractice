@@ -57,9 +57,12 @@ int main()
 	std::thread tradeThread([&account3, &account4, &wizardRobes]()
 		{
 			account3.BuyItem(account4, wizardRobes, 20);
+			return true;
 		});
 
 	tradeThread.join();
+
+	// "Unit tests" for single account buy
 	if (account3.GetBalance() == 40)
 	{
 		std::cout << "Success!" << endl;
@@ -106,12 +109,13 @@ int main()
 	TradeItem* shinyWizardRobes = new TradeItem(TradeItem::ItemType::ROBES, "Shiny Wizard Robes");
 	TradeItem* sword = new TradeItem(TradeItem::ItemType::SWORD, "Sparkly sword");
 
-	account5.AddToInventory(wizardRobes);
-	account6.AddToInventory(sword);
+	account5.AddToInventory(sword);
+	account6.AddToInventory(shinyWizardRobes);
 
 	std::thread tradeThread2([&account5, &account6, &shinyWizardRobes]()
 		{
 			account5.BuyItem(account6, shinyWizardRobes, 30);
+			return true;
 		});
 
 	tradeThread2.join();
@@ -119,9 +123,47 @@ int main()
 	std::thread tradeThread3([&account5, &account6, &sword]()
 	{
 		account6.BuyItem(account5, sword, 20);
+		return true;
 	});
 
 	tradeThread3.join();
+
+	//"Unit Tests" for double account trade
+	if (account5.GetBalance() == 50)
+	{
+		std::cout << "Success!" << endl;
+	}
+	else
+	{
+		std::cout << "Balance is wrong with trade account 5" << endl;
+	}
+
+	if (account6.GetBalance() == 30)
+	{
+		std::cout << "Success!" << endl;
+	}
+	else
+	{
+		std::cout << "Balance is wrong with trade account 6" << endl;
+	}
+
+	if (!account5.HasItem(sword))
+	{
+		std::cout << "Success!" << endl;
+	}
+	else
+	{
+		std::cout << "Wrong item on trade account 5" << endl;
+	}
+
+	if (!account6.HasItem(shinyWizardRobes))
+	{
+		std::cout << "Success!" << endl;
+	}
+	else
+	{
+		std::cout << "Wrong item on trade account 6" << endl;
+	}
 
 	std::cout << "If you dont hit this line, there's probably a deadlock." << endl;
 	return 0;
