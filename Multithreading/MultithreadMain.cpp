@@ -46,7 +46,7 @@ int main()
 	std::cout << "Account Balance: " << account2.GetBalance() << endl;
 
 
-	//Trading!!
+	//Buying!!
 	CoinAccount account3(60);
 	CoinAccount account4(20);
 
@@ -56,7 +56,7 @@ int main()
 
 	std::thread tradeThread([&account3, &account4, &wizardRobes]()
 		{
-			account3.AccountTrade(account4, wizardRobes, 20);
+			account3.BuyItem(account4, wizardRobes, 20);
 		});
 
 	tradeThread.join();
@@ -99,5 +99,30 @@ int main()
 	std::cout << "Trade Account1 Balance: " << account3.GetBalance() << endl;
 	std::cout << "Trade Account2 Balance: " << account4.GetBalance() << endl;
 
+	//Trading!!
+	CoinAccount account5(60);
+	CoinAccount account6(20);
+
+	TradeItem* shinyWizardRobes = new TradeItem(TradeItem::ItemType::ROBES, "Shiny Wizard Robes");
+	TradeItem* sword = new TradeItem(TradeItem::ItemType::SWORD, "Sparkly sword");
+
+	account5.AddToInventory(wizardRobes);
+	account6.AddToInventory(sword);
+
+	std::thread tradeThread2([&account5, &account6, &shinyWizardRobes]()
+		{
+			account5.BuyItem(account6, shinyWizardRobes, 30);
+		});
+
+	tradeThread2.join();
+
+	std::thread tradeThread3([&account5, &account6, &sword]()
+	{
+		account6.BuyItem(account5, sword, 20);
+	});
+
+	tradeThread3.join();
+
+	std::cout << "If you dont hit this line, there's probably a deadlock." << endl;
 	return 0;
 }

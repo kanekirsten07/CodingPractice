@@ -1,9 +1,17 @@
 #include "CoinAccount.h"
 #include <iostream>
+#include <shared_mutex>
 
 using namespace std;
 
-//The mutex apparently needs to be here and I don't understand things
+//shared lock for read/write purposes
+std::shared_mutex accountMutex;
+
+int CoinAccount::GetBalance()
+{
+	std::shared_lock<std::shared_mutex> lock(accountMutex);
+	return *m_balance;
+};
 
 bool CoinAccount::AddBalance(const int& amount)
 {
@@ -55,15 +63,15 @@ bool CoinAccount::RemoveBalanceMutex(const int& amount)
 
 bool CoinAccount::HasInventoryRoom()
 {
-	return *inventorySize != inventory.size();
+	return inventorySize != inventory.size();
 }
 
 bool CoinAccount::HasItem(TradeItem* item)
 {
 	std::unique_lock<std::shared_mutex> lock(accountMutex);
-	for (int i = 0; i < *inventorySize; i++)
+	for (int i = 0; i < inventory.size(); i++)
 	{
-		if (inventory[i]->type == item->type && inventory[i]->itemName.compare(item->itemName) == 0)
+		if (nullptr != inventory[i] && inventory[i]->type == item->type && inventory[i]->itemName.compare(item->itemName) == 0)
 		{
 			return true;
 		}
@@ -83,12 +91,12 @@ bool CoinAccount::AddToInventory(TradeItem* item)
 	return true;
 }
 
-bool CoinAccount::RemoveItem(TradeItem& tradeItem, /*out*/ TradeItem* item)
+bool CoinAccount::RemoveItemFromInventory(TradeItem& tradeItem, /*out*/ TradeItem* item)
 {
 	std::unique_lock<std::shared_mutex> lock(accountMutex);
-	for (int i = 0; i < *inventorySize; i++)
+	for (int i = 0; i < inventory.size(); i++)
 	{
-		if (inventory[i]->type == tradeItem.type&& inventory[i]->itemName.compare(tradeItem.itemName) == 0)
+		if (nullptr != inventory[i] && inventory[i]->type == tradeItem.type&& inventory[i]->itemName.compare(tradeItem.itemName) == 0)
 		{
 			item = inventory[i];
 			inventory.erase(inventory.begin()+i);
@@ -99,27 +107,30 @@ bool CoinAccount::RemoveItem(TradeItem& tradeItem, /*out*/ TradeItem* item)
 	return false;
 }
 
-bool CoinAccount::AccountTrade(CoinAccount& accountToTrade, TradeItem* item,uint32_t price)
+bool CoinAccount::BuyItem(CoinAccount& accountToTrade, TradeItem* item,uint32_t price)
 {
-	std::unique_lock<std::shared_mutex> lock(accountMutex);
+	//Step 1: check to see if if you have inventory space
 	if (!HasInventoryRoom())
 	{
 		std::cout << "Trade failed. Account does not have room to take item." << endl;
 		return false;
 	}
 
+	//Step 2: Check to see that the player has the required balance
 	if (*m_balance - price < 0)
 	{
 		std::cout << "Trade failed. Account does not have prerequisite funds." << endl;
 		return false;
 	}
 
+	//Step 3: Remove balance from buying account
 	if (!RemoveBalanceMutex(price))
 	{
 		std::cout << "Trade Failed. Remove Balance Failed" << endl;
 		return false;
 	}
 
+	//Step 4: Add balance to selling account
 	if (!accountToTrade.AddBalanceMutex(price))
 	{
 		std::cout << "Trade Failed. Remove Balance Failed" << endl;
@@ -132,29 +143,46 @@ bool CoinAccount::AccountTrade(CoinAccount& accountToTrade, TradeItem* item,uint
 	}
 	TradeItem* tradeItem = nullptr;
 
-	if (!accountToTrade.RemoveItem(*item, tradeItem))
+	//Step 5: Remove item from selling acccount
+	if (!accountToTrade.RemoveItemFromInventory(*item, tradeItem))
 	{
-		std::cout << "Trade failed, account does not have required item." << endl;
-		return false;
-	}
+		//Revert step 3
+		if (!accountToTrade.RemoveBalanceMutex(price))
+		{
+			std::cout << "Add Balance Revert Failed after attempting to remove item" << endl;
+		}
 
-
-	if (!AddToInventory(tradeItem))
-	{
-		std::cout << "Trade Failed. Cannot Add Item to Inventory" << endl;
-		std::cout << "Reverting first account balance";
+		//Revert step 4
 		if (!AddBalanceMutex(price))
 		{
 			std::cout << "Remove Balance Revert Failed" << endl;
 		}
-		else if (!accountToTrade.AddBalanceMutex(price))
+		std::cout << "Trade failed, account does not have required item after attempting to remove item" << endl;
+		return false;
+	}
+
+	//Step 5: Add Item to buying account's inventory
+	if (!AddToInventory(tradeItem))
+	{
+		std::cout << "Trade Failed. Cannot Add Item to Inventory" << endl;
+		std::cout << "Reverting first account balance";
+
+		//Revert step 4
+		if (!AddBalanceMutex(price))
 		{
-			std::cout << "Add Balance Revert Failed" << endl;
+			std::cout << "Remove Balance Revert Failed after attempting to add item" << endl;
+		}
+
+		//Revert step 3
+		if (!accountToTrade.AddBalanceMutex(price))
+		{
+			std::cout << "Add Balance Revert Failed after attempting to add item" << endl;
 		}
 
 		return false;
 	}
 
+	//Step 6: Success!
 	return true;
 }
 
