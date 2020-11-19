@@ -6,6 +6,7 @@ using namespace std;
 
 //shared lock for read/write purposes
 std::shared_mutex accountMutex;
+std::recursive_mutex tradeMutex;
 
 int CoinAccount::GetBalance()
 {
@@ -109,6 +110,7 @@ bool CoinAccount::RemoveItemFromInventory(TradeItem& tradeItem, /*out*/ TradeIte
 
 bool CoinAccount::BuyItem(CoinAccount& accountToTrade, TradeItem* item,uint32_t price)
 {
+	std::unique_lock<std::recursive_mutex> lock(tradeMutex);
 	//Step 1: check to see if if you have inventory space
 	if (!HasInventoryRoom())
 	{
@@ -161,11 +163,17 @@ bool CoinAccount::BuyItem(CoinAccount& accountToTrade, TradeItem* item,uint32_t 
 		return false;
 	}
 
-	//Step 5: Add Item to buying account's inventory
+	//Step 6: Add Item to buying account's inventory
 	if (!AddToInventory(tradeItem))
 	{
 		std::cout << "Trade Failed. Cannot Add Item to Inventory" << endl;
 		std::cout << "Reverting first account balance";
+
+		//Revert step 3
+		if (!accountToTrade.AddBalanceMutex(price))
+		{
+			std::cout << "Add Balance Revert Failed after attempting to add item" << endl;
+		}
 
 		//Revert step 4
 		if (!AddBalanceMutex(price))
@@ -173,10 +181,10 @@ bool CoinAccount::BuyItem(CoinAccount& accountToTrade, TradeItem* item,uint32_t 
 			std::cout << "Remove Balance Revert Failed after attempting to add item" << endl;
 		}
 
-		//Revert step 3
-		if (!accountToTrade.AddBalanceMutex(price))
+		//Revert step 5
+		if (!accountToTrade.AddToInventory(item))
 		{
-			std::cout << "Add Balance Revert Failed after attempting to add item" << endl;
+			std::cout << "Item readdition failed" << endl;
 		}
 
 		return false;
