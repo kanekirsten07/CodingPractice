@@ -6,8 +6,8 @@
 class Network
 {
 public:
-	void ProcessRequestQueue();
-	void ProcessResponseQueue();
+	Packet& ProcessRequestQueue();
+	Packet& ProcessResponseQueue();
 	void AddToRequestQueue(Packet packet);
 	void AddToResponseQueue(Packet packet);
 

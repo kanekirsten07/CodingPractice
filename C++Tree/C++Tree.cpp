@@ -35,6 +35,12 @@ void testScope2(KirstenSharedPtr copy2)
 
 int main()
 {
+    //Test pointers
+    int* x = new int(1);
+    auto pointer = *x;
+    auto reference = &x;
+
+
     std::cout << "Hello World! Here is my tree!\n";
     /* Example 1*/
     Node* n = new Node(1);

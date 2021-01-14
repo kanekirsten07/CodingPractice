@@ -6,30 +6,33 @@ using namespace std;
 
 std::recursive_mutex requestMutex;
 std::recursive_mutex responseMutex;
-void Network::ProcessRequestQueue()
+Packet& Network::ProcessRequestQueue()
 {
+	std::unique_lock<std::recursive_mutex> lock(requestMutex);
 	if (requestQueue.empty())
 	{
 		std::cout << "Request Queue is empty" << endl;
 		return;
 	}
-	std::unique_lock<std::recursive_mutex> lock(requestMutex);
-	Packet t = requestQueue.front();
+	Packet& t = requestQueue.front();
 	requestQueue.pop();
 	std::cout << "Processing request packet!" << endl;
+	return t;
 } 
 
-void Network::ProcessResponseQueue()
+Packet& Network::ProcessResponseQueue()
 {
-	std::unique_lock<std::recursive_mutex> lock(responseMutex);
+	std::unique_lock<std::recursive_mutex> lock(responseMutex); 
 	if(responseQueue.empty())
 	{
 		std::cout << "Response Queue is empty" << endl;
 		return;
 	}
-	Packet t = responseQueue.front();
+	Packet& t = responseQueue.front();
 	responseQueue.pop();
 	std::cout << "Processing response packet!" << endl;
+
+	return t;
 }
 
 void Network::AddToRequestQueue(Packet packet)
